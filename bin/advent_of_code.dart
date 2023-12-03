@@ -16,6 +16,12 @@ ArgParser buildParser() {
       help: 'Specify the directory to get input data from.',
       defaultsTo: './inputs',
     )
+    ..addOption(
+      'part',
+      abbr: 'p',
+      help: 'Specify what part of the puzzle to run.',
+      defaultsTo: '2',
+    )
     ..addFlag(
       'help',
       abbr: 'h',
@@ -46,6 +52,7 @@ void main(List<String> arguments) {
     final ArgResults results = argParser.parse(arguments);
     bool verbose = false;
     int day = DateTime.now().day;
+    int part = 2;
     String inputDirectory = "./inputs";
     // Process the parsed arguments.
     if (results.wasParsed('help')) {
@@ -65,9 +72,12 @@ void main(List<String> arguments) {
     if (results.wasParsed('input_directory')) {
       inputDirectory = results['input_directory'];
     }
+    if (results.wasParsed('part')) {
+      part = int.parse(results['part']);
+    }
     print("Solving Day $day of AOC 2023!");
     Calendar calendar = Calendar(inputDirectory: inputDirectory);
-    print(calendar.executeSolution(day));
+    print(calendar.executeSolution(day, part));
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);

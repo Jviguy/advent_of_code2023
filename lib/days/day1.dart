@@ -1,4 +1,6 @@
 
+import 'package:advent_of_code/calendar.dart';
+
 const Map<String, int> translationTable = {
   "one": 1,
   "two": 2,
@@ -12,45 +14,73 @@ const Map<String, int> translationTable = {
   "zero": 0
 };
 
-int day1(String input) {
-  int s = 0;
-  for (String line in input.split("\n")) {
-    int l = 0;
-    int r = line.length-1;
-    String? ls = wordHelper(line, false);
-    String? rs = wordHelper(line, true);
-    while (l<r) {
-      int la = line.codeUnitAt(l);
-      int ra = line.codeUnitAt(r);
-      if (!(la >= 48 && la <= 57)) {
-        l+=1;
-      } else if (ra >= 48 && ra <= 57) {
-        break;
+class Day1Solution extends DaySolution {
+  @override
+  int part1(String input) {
+    int s = 0;
+    for (String line in input.split("\n")) {
+      int l = 0;
+      int r = line.length-1;
+      while (l<r) {
+        int la = line.codeUnitAt(l);
+        int ra = line.codeUnitAt(r);
+        if (!(la >= 48 && la <= 57)) {
+          l+=1;
+        } else if (ra >= 48 && ra <= 57) {
+          break;
+        }
+        if (!(ra >= 48 && ra <= 57)) {
+          r-=1;
+        }
       }
-      if (!(ra >= 48 && ra <= 57)) {
-        r-=1;
-      }
+      int tens = line.codeUnitAt(l) - 48;
+      int ones = line.codeUnitAt(r) - 48;
+      s += tens * 10 + ones;
     }
-    int tens = line.codeUnitAt(l) - 48;
-    int ones = line.codeUnitAt(r) - 48;
-    if (ls != null) {
-      int lsi = line.indexOf(ls);
-      if (lsi < l) {
-        // use lsi.
-        tens = translationTable[ls]!;
-      }
-    }
-    if (rs != null) {
-      int rsi = line.lastIndexOf(rs);
-      if (rsi > r) {
-        // use rsi.
-        ones = translationTable[rs]!;
-      }
-    }
-    // if both l and r represent character units / digits in the string.
-    s += tens * 10 + ones;
+    return s;
   }
-  return s;
+
+  @override
+  int part2(String input) {
+    int s = 0;
+    for (String line in input.split("\n")) {
+      int l = 0;
+      int r = line.length-1;
+      String? ls = wordHelper(line, false);
+      String? rs = wordHelper(line, true);
+      while (l<r) {
+        int la = line.codeUnitAt(l);
+        int ra = line.codeUnitAt(r);
+        if (!(la >= 48 && la <= 57)) {
+          l+=1;
+        } else if (ra >= 48 && ra <= 57) {
+          break;
+        }
+        if (!(ra >= 48 && ra <= 57)) {
+          r-=1;
+        }
+      }
+      int tens = line.codeUnitAt(l) - 48;
+      int ones = line.codeUnitAt(r) - 48;
+      if (ls != null) {
+        int lsi = line.indexOf(ls);
+        if (lsi < l) {
+          // use lsi.
+          tens = translationTable[ls]!;
+        }
+      }
+      if (rs != null) {
+        int rsi = line.lastIndexOf(rs);
+        if (rsi > r) {
+          // use rsi.
+          ones = translationTable[rs]!;
+        }
+      }
+      // if both l and r represent character units / digits in the string.
+      s += tens * 10 + ones;
+    }
+    return s;
+  }
 }
 
 String? wordHelper(String line, bool last) {

@@ -1,20 +1,33 @@
 import 'dart:io';
 
+import 'package:advent_of_code/days/day3.dart';
+
 import 'days/days.dart';
 
-typedef DaySolution<R> = R Function(String input);
+
+abstract class DaySolution {
+  int part1(String input);
+  int part2(String input);
+}
+
 
 class Calendar {
-  final List<DaySolution> solutions = [day1,day2];
+  final List<DaySolution> solutions = [
+    Day1Solution(),Day2Solution(),Day3Solution()
+  ];
   String inputDirectory;
 
   Calendar({required this.inputDirectory});
 
-  R executeSolution<R>(int day) {
+  int executeSolution(int day, int part) {
     if (day >= 1 && day <= solutions.length) {
       File file = File("$inputDirectory/day$day.txt");
       String input = file.readAsStringSync();
-      return solutions[day - 1](input);
+      if (part == 1) {
+        return solutions[day - 1].part1(input);
+      } else {
+        return solutions[day - 1].part2(input);
+      }
     } else {
       throw ArgumentError('Invalid day');
     }
