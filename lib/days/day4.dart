@@ -44,12 +44,12 @@ class Day4Solution extends DaySolution {
 
   @override
   int part2(String input) {
-    List<int> count = [];
-    List<int> cloneValues = [];
     // get cloneValues and instantiate count.
-    for (String line in input.split("\n")) {
+    List<String> lines = input.split("\n");
+    Map<int,int> count = {for (int i = 0; i < lines.length; i++) i: 1};
+    for (int i = 0; i < lines.length; i++) {
+      String line = lines[i];
       var [_, nums] = line.split(": ");
-      count.add(1);
       var [winningNums, pulledNums] = nums.split(" | ");
       List<int> winners = extractNums(winningNums);
       List<int> pulled = extractNums(pulledNums);
@@ -59,23 +59,18 @@ class Day4Solution extends DaySolution {
           cloneValue++;
         }
       }
-      cloneValues.add(cloneValue);
-    }
-    for (int i = 0; i < count.length; i++) {
-      int countToBeAdded = count[i];
-      int rightIndexRange = cloneValues[i];
-      for (int j = i+1; j < i+1+rightIndexRange; j++) {
-        count[j]+=countToBeAdded;
+      for (int j = i+1; j < cloneValue+i+1; j++) {
+        count.update(j, (value) => value+(count[i]??1));
       }
     }
     return sum(count);
   }
 
-  int sum(List<int> list) {
+  int sum(Map<int,int> list) {
     int s = 0;
-    for (int v in list) {
-      s += v;
-    }
+    list.forEach((key, value) {
+      s += value;
+    });
     return s;
   }
 }
