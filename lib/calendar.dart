@@ -24,7 +24,7 @@ class Calendar {
   int executeSolution(int day, int part) {
     if (day >= 1 && day <= solutions.length) {
       File file = File("$inputDirectory/day$day.txt");
-      String input = file.readAsStringSync();
+      String input = file.readAsStringSync().trim();
       if (part == 1) {
         return solutions[day - 1].part1(input);
       } else {

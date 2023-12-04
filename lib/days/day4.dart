@@ -44,30 +44,38 @@ class Day4Solution extends DaySolution {
 
   @override
   int part2(String input) {
-    List<String> lines = input.split("\n");
-    int i = 0;
-    while (i < lines.length) {
-      String line = lines[i];
+    List<int> count = [];
+    List<int> cloneValues = [];
+    // get cloneValues and instantiate count.
+    for (String line in input.split("\n")) {
       var [_, nums] = line.split(": ");
-      int p = 0;
+      count.add(1);
       var [winningNums, pulledNums] = nums.split(" | ");
       List<int> winners = extractNums(winningNums);
       List<int> pulled = extractNums(pulledNums);
+      int cloneValue = 0;
       for (int num in pulled) {
         if (winners.contains(num)) {
-          p++;
+          cloneValue++;
         }
       }
-      for (int j = i + 1; j < p + i + 4; j += 2) {
-        print(j);
-        lines.insert(j, lines[j]);
-      }
-      print(lines);
-      if (i == 1) {
-        break;
-      }
-      i++;
+      cloneValues.add(cloneValue);
     }
-    return lines.length;
+    for (int i = 0; i < count.length; i++) {
+      int countToBeAdded = count[i];
+      int rightIndexRange = cloneValues[i];
+      for (int j = i+1; j < i+1+rightIndexRange; j++) {
+        count[j]+=countToBeAdded;
+      }
+    }
+    return sum(count);
+  }
+
+  int sum(List<int> list) {
+    int s = 0;
+    for (int v in list) {
+      s += v;
+    }
+    return s;
   }
 }
