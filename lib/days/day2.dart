@@ -3,7 +3,6 @@ import 'dart:collection';
 import 'package:advent_of_code/calendar.dart';
 
 class Day2Solution extends DaySolution {
-
   @override
   int part1(String input) {
     int s = 0;
@@ -32,7 +31,7 @@ class Day2Solution extends DaySolution {
         }
       }
       if (possible) {
-        s+=id;
+        s += id;
       }
     }
     return s;
@@ -42,21 +41,21 @@ class Day2Solution extends DaySolution {
   int part2(String input) {
     int s = 0;
     for (String line in input.split("\n")) {
-      var [idSection, game] = line.split(": ");
-      int id = int.parse(idSection.split(" ")[1]);
+      var [_, game] = line.split(": ");
       HashMap<String, int> colorMap = HashMap();
       for (String round in game.split("; ")) {
         for (String cubes in round.split(", ")) {
           var [amts, color] = cubes.split(" ");
           int amt = int.parse(amts);
-          colorMap.update(color, (value) => amt>value?amt:value, ifAbsent: ()=>amt);
+          colorMap.update(color, (value) => amt > value ? amt : value,
+              ifAbsent: () => amt);
         }
       }
       int r = 1;
       for (int min in colorMap.values) {
         r *= min;
       }
-      s+=r;
+      s += r;
     }
     return s;
   }

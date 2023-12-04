@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:advent_of_code/days/day3.dart';
+import 'package:advent_of_code/days/day4.dart';
 
 import 'days/days.dart';
 
@@ -13,7 +14,8 @@ abstract class DaySolution {
 
 class Calendar {
   final List<DaySolution> solutions = [
-    Day1Solution(),Day2Solution(),Day3Solution()
+    Day1Solution(),Day2Solution(),Day3Solution(), Day4Solution(),
+    
   ];
   String inputDirectory;
 
