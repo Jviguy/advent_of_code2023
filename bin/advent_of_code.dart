@@ -29,12 +29,6 @@ ArgParser buildParser() {
       help: 'Print this usage information.',
     )
     ..addFlag(
-      'verbose',
-      abbr: 'v',
-      negatable: false,
-      help: 'Show additional command output.',
-    )
-    ..addFlag(
       'version',
       negatable: false,
       help: 'Print the tool version.',
@@ -48,12 +42,11 @@ void printUsage(ArgParser argParser) {
 
 void main(List<String> arguments) {
   final ArgParser argParser = buildParser();
+  int day = DateTime.now().day;
+  int part = 2;
+  String inputDirectory = "./inputs";
   try {
     final ArgResults results = argParser.parse(arguments);
-    bool verbose = false;
-    int day = DateTime.now().day;
-    int part = 2;
-    String inputDirectory = "./inputs";
     // Process the parsed arguments.
     if (results.wasParsed('help')) {
       printUsage(argParser);
@@ -62,9 +55,6 @@ void main(List<String> arguments) {
     if (results.wasParsed('version')) {
       print('advent_of_code version: $version');
       return;
-    }
-    if (results.wasParsed('verbose')) {
-      verbose = true;
     }
     if (results.wasParsed('day')) {
       day = int.parse(results['day']);
@@ -75,13 +65,13 @@ void main(List<String> arguments) {
     if (results.wasParsed('part')) {
       part = int.parse(results['part']);
     }
-    print("Solving Day $day of AOC 2023!");
-    Calendar calendar = Calendar(inputDirectory: inputDirectory);
-    print(calendar.executeSolution(day, part));
   } on FormatException catch (e) {
     // Print usage information if an invalid argument was provided.
     print(e.message);
     print('');
     printUsage(argParser);
   }
+  print("Solving Day $day of AOC 2023!");
+  Calendar calendar = Calendar(inputDirectory: inputDirectory);
+  print(calendar.executeSolution(day, part));
 }
