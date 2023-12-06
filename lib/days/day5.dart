@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:advent_of_code/calendar.dart';
 
@@ -57,47 +58,77 @@ class Day5Solution extends DaySolution {
     };
   }
 
-  HashMap<int, int> map(List<String> lines) {
-    HashMap<int, int> r = HashMap();
+  List<List<int>> map(List<String> lines) {
+    List<List<int>> r = [];
     for (String line in lines) {
       List<int> nums = [];
       for (String num in line.split(" ")) {
         nums.add(int.parse(num));
       }
-      for (int i = 0; i < nums[2]; i++) {
-        r.putIfAbsent(nums[0] + i, () => nums[1] + i);
-      }
+      r.add(nums);
     }
     return r;
   }
 
+  // Credit to Hyperneutrino for this solution, I tried my above solution for part 1 ^^
+  // But it failed in terms of speeding up for the number of inputs.
+  // I knew I had to do something with the ranges as to shorten the workload,
+  // I just didn't know how, I am doing this as a learning experience and -
+  // his video greatly helped me understand his approach to splitting the ranges.
   @override
   int part2(String input) {
     List<List<String>> numbers = input
         .split(":")
         .map((e) => e
-            .split("\n")
+            .split("\r\n")
             .where((element) => !element.contains('-to-'))
             .where((element) => element.isNotEmpty)
             .toList())
         .where((element) => !element.contains("seeds"))
         .toList();
-    List<int> seeds = numbers
+    List<int> firstLine = numbers
         .removeAt(0)[0]
         .split(" ")
         .where((element) => element.isNotEmpty)
         .map((e) => int.parse(e))
         .toList();
-    int min = -1;
-    print("TEST");
-    for (List<String> mapS in numbers) {
-      HashMap<int, int> conversionMap = map(mapS);
-      for (int i = 0; i < seeds.length; i++) {
-        if (conversionMap.containsKey(seeds[i])) {
-          seeds[i] = conversionMap[seeds[i]] ?? seeds[i];
+    List<(int,int)> seeds = [];
+    for (int i = 0; i < firstLine.length-1; i+=2) {
+      seeds.add((firstLine[i], firstLine[i]+firstLine[i+1]));
+    }
+    for (List<String> blocks in numbers) {
+      List<(int,int)> newSeeds = [];
+      List<List<int>> ranges = map(blocks);
+      while (seeds.isNotEmpty) {
+        var (start, end) = seeds.removeLast();
+        bool overlap = false;
+        for (var [destStart,sourceStart,rangeLen] in ranges) {
+          int overlapStart = max(start, sourceStart);
+          int overlapEnd = min(end, sourceStart+rangeLen);
+          if (overlapStart < overlapEnd) {
+            newSeeds.add((overlapStart - sourceStart + destStart,overlapEnd - sourceStart + destStart));
+            if (end > overlapEnd) {
+              seeds.add((overlapEnd,end));
+            }
+            if (overlapStart > start) {
+              seeds.add((start,overlapStart));
+            }
+            overlap = true;
+            break;
+          }
+        }
+        if (!overlap) {
+          newSeeds.add((start,end));
         }
       }
+      seeds=newSeeds;
     }
-    return min;
+    int m = -1;
+    for (var (start,_) in seeds) {
+      if (start < m || m == -1) {
+        m=start;
+      }
+    }
+    return m;
   }
 }
