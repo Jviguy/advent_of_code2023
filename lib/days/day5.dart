@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:advent_of_code/calendar.dart';
 
 class Day5Solution extends DaySolution {
@@ -55,9 +57,47 @@ class Day5Solution extends DaySolution {
     };
   }
 
+  HashMap<int, int> map(List<String> lines) {
+    HashMap<int, int> r = HashMap();
+    for (String line in lines) {
+      List<int> nums = [];
+      for (String num in line.split(" ")) {
+        nums.add(int.parse(num));
+      }
+      for (int i = 0; i < nums[2]; i++) {
+        r.putIfAbsent(nums[0] + i, () => nums[1] + i);
+      }
+    }
+    return r;
+  }
+
   @override
   int part2(String input) {
-    // TODO: implement part2
-    throw UnimplementedError();
+    List<List<String>> numbers = input
+        .split(":")
+        .map((e) => e
+            .split("\n")
+            .where((element) => !element.contains('-to-'))
+            .where((element) => element.isNotEmpty)
+            .toList())
+        .where((element) => !element.contains("seeds"))
+        .toList();
+    List<int> seeds = numbers
+        .removeAt(0)[0]
+        .split(" ")
+        .where((element) => element.isNotEmpty)
+        .map((e) => int.parse(e))
+        .toList();
+    int min = -1;
+    print("TEST");
+    for (List<String> mapS in numbers) {
+      HashMap<int, int> conversionMap = map(mapS);
+      for (int i = 0; i < seeds.length; i++) {
+        if (conversionMap.containsKey(seeds[i])) {
+          seeds[i] = conversionMap[seeds[i]] ?? seeds[i];
+        }
+      }
+    }
+    return min;
   }
 }

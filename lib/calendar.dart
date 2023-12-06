@@ -1,8 +1,5 @@
 import 'dart:io';
 
-import 'package:advent_of_code/days/day3.dart';
-import 'package:advent_of_code/days/day4.dart';
-
 import 'days/days.dart';
 
 abstract class DaySolution {
