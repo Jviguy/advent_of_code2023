@@ -44,7 +44,7 @@ class Day4Solution extends DaySolution {
 
   @override
   int part2(String input) {
-    // get cloneValues and instantiate count.
+    // instantiate count.
     List<String> lines = input.split("\n");
     Map<int,int> count = {for (int i = 0; i < lines.length; i++) i: 1};
     for (int i = 0; i < lines.length; i++) {
