@@ -15,6 +15,7 @@ class Calendar {
     Day4Solution(),
     Day5Solution(),
     Day6Solution(),
+    Day7Solution(),
   ];
   String inputDirectory;
 
