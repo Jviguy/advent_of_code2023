@@ -8,3 +8,5 @@ export 'day5.dart';
 export 'day6.dart';
 export 'day7.dart';
 export 'day8.dart';
+export 'day9.dart';
+export 'day10.dart';
