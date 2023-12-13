@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:math';
 
 import 'package:advent_of_code/calendar.dart';
@@ -92,41 +91,44 @@ class Day5Solution extends DaySolution {
         .where((element) => element.isNotEmpty)
         .map((e) => int.parse(e))
         .toList();
-    List<(int,int)> seeds = [];
-    for (int i = 0; i < firstLine.length-1; i+=2) {
-      seeds.add((firstLine[i], firstLine[i]+firstLine[i+1]));
+    List<(int, int)> seeds = [];
+    for (int i = 0; i < firstLine.length - 1; i += 2) {
+      seeds.add((firstLine[i], firstLine[i] + firstLine[i + 1]));
     }
     for (List<String> blocks in numbers) {
-      List<(int,int)> newSeeds = [];
+      List<(int, int)> newSeeds = [];
       List<List<int>> ranges = map(blocks);
       while (seeds.isNotEmpty) {
         var (start, end) = seeds.removeLast();
         bool overlap = false;
-        for (var [destStart,sourceStart,rangeLen] in ranges) {
+        for (var [destStart, sourceStart, rangeLen] in ranges) {
           int overlapStart = max(start, sourceStart);
-          int overlapEnd = min(end, sourceStart+rangeLen);
+          int overlapEnd = min(end, sourceStart + rangeLen);
           if (overlapStart < overlapEnd) {
-            newSeeds.add((overlapStart - sourceStart + destStart,overlapEnd - sourceStart + destStart));
+            newSeeds.add((
+              overlapStart - sourceStart + destStart,
+              overlapEnd - sourceStart + destStart
+            ));
             if (end > overlapEnd) {
-              seeds.add((overlapEnd,end));
+              seeds.add((overlapEnd, end));
             }
             if (overlapStart > start) {
-              seeds.add((start,overlapStart));
+              seeds.add((start, overlapStart));
             }
             overlap = true;
             break;
           }
         }
         if (!overlap) {
-          newSeeds.add((start,end));
+          newSeeds.add((start, end));
         }
       }
-      seeds=newSeeds;
+      seeds = newSeeds;
     }
     int m = -1;
-    for (var (start,_) in seeds) {
+    for (var (start, _) in seeds) {
       if (start < m || m == -1) {
-        m=start;
+        m = start;
       }
     }
     return m;
